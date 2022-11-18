@@ -617,11 +617,6 @@ int main(int argc, char **argv) {
 				}
 			}
 
-			// Delete cheat data
-			remove("sd:/_nds/nds-bootstrap/cheatData.bin");
-			if(!widescreenLoaded)
-				remove("sd:/_nds/nds-bootstrap/wideCheatData.bin");
-
 			const char *typeToReplace = ".nds";
 			if (extention(filename, ".dsi")) {
 				typeToReplace = ".dsi";
@@ -637,9 +632,11 @@ int main(int argc, char **argv) {
 			if(gameSettings.saveNo > 0)
 				snprintf(savExtension, sizeof(savExtension), ".sav%d", gameSettings.saveNo);
 			savename = ReplaceAll(filename, typeToReplace, savExtension);
+            std::string saveNameFc = ReplaceAll(filename, typeToReplace, ".sav");
 			romFolderNoSlash = romfolder;
 			RemoveTrailingSlashes(romFolderNoSlash);
-			savepath = romFolderNoSlash+"/saves/"+savename;
+            mkdir(("/saves/"+savename).c_str(), 0777);
+			savepath = "sd:/saves/"+savename+"/"+saveNameFc;
 
 			std::string dsiWareSrlPath = ndsPath;
 			std::string dsiWarePubPath = ReplaceAll(savepath, ".sav", ".pub");
